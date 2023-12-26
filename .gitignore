@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+.DS_Store
+application.yml
+application-test.yml
+application-dev.yml
+application-prob.yml
