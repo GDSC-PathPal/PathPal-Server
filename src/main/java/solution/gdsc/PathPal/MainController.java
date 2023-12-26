@@ -12,8 +12,13 @@ public class MainController {
         return "hello world!";
     }
 
-    @GetMapping
+    @GetMapping("/test")
     public String test(@RequestBody Dto dto) {
-        return "받은 데이터 = " + dto.getName();
+        if (dto.getName() == null) {
+            return "받은 데이터가 없습니다.";
+        }
+        else {
+            return "받은 데이터 = " + dto.getName();
+        }
     }
 }
