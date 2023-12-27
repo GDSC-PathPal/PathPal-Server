@@ -1,6 +1,5 @@
 package solution.gdsc.PathPal;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -15,8 +14,8 @@ import java.nio.file.Path;
 @RestController
 public class MainController {
 
-    @Value("${image.path}")
-    private String path;
+    //@Value("${image.path}")
+    private String path = "/home/hsk4991149/static/image/";
 
     @GetMapping
     public String index() {
