@@ -1,7 +1,5 @@
 package solution.gdsc.PathPal.global.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,11 +13,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
+//@Component
 public class WebSocketHandler extends BinaryWebSocketHandler {
 
-    @Value("${image.path:/home/hsk4991149/static/image/}")
-    private String path;
+    //@Value("${image.path:/home/hsk4991149/static/image/}")
+    private String path = "/home/hsk4991149/static/image/";
 
     private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
 
