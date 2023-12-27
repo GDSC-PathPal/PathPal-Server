@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class WebSocketHandler extends BinaryWebSocketHandler {
 
-    @Value("${image.path}")
+    @Value("${image.path:/home/hsk4991149/static/image/}")
     private String path;
 
     private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
