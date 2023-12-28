@@ -13,8 +13,8 @@ import org.springframework.http.HttpHeaders;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Greenmate API 명세서",
-                description = "alpha-test를 위한 Greenmate API 명세서입니다.",
+                title = "PathPal API 명세서",
+                description = "GDSC Solution Challenge - PathPal API 명세서입니다.",
                 version = "0.1"
         )
 )

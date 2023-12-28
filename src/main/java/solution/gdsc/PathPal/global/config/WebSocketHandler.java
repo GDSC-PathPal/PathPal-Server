@@ -18,6 +18,7 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
 
     //@Value("${image.path:/home/hsk4991149/static/image/}")
     private String path = "/home/hsk4991149/static/image/";
+    //private String path = "/Users/hongseungtaeg/Desktop/project/GDSC-PathPal/PathPal/src/main/resources/static/";
 
     private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
 
