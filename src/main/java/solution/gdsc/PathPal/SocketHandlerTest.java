@@ -1,4 +1,4 @@
-package solution.gdsc.PathPal.global.config;
+package solution.gdsc.PathPal;
 
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 //@Component
-public class WebSocketHandler extends BinaryWebSocketHandler {
+public class SocketHandlerTest extends BinaryWebSocketHandler {
 
     //@Value("${image.path:/home/hsk4991149/static/image/}")
     private String path = "/home/hsk4991149/static/image/";
