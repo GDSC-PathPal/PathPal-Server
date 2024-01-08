@@ -9,7 +9,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,11 +19,21 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
     @Value("${image.path}")
     private String path;
 
+    //@Value("${ML.hostName}")
+    private String hostName = "127.0.0.1";
+    private int port = 9999;
+
     private final InferenceService inferenceService;
     private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
+    private final SocketClient socketClient;
 
     public ClientInferenceController(InferenceService inferenceService) {
         this.inferenceService = inferenceService;
+        try {
+            this.socketClient = new SocketClient(hostName, port);
+        } catch (IOException e) {
+            throw new RuntimeException("SocketClient 생성 실패", e);
+        }
     }
 
     @Override
@@ -39,8 +48,7 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
 
         String responseMessage = "";
         try {
-            // TODO. ML 모델 추론
-            List<Inference> inferences = new ArrayList<>();
+            List<Inference> inferences = socketClient.inferenceImage(bytes);
             List<InferenceTranslate> inferenceTranslates = inferenceService.convertInference(inferences);
 
             responseMessage = JsonUtil.toJsonFormat(inferenceTranslates);

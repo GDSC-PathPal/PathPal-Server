@@ -11,11 +11,11 @@ public class JsonUtil {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (int i = 0; i < inferenceTranslates.size(); i++) {
-            sb.append("{\"korean\": \"");
+            sb.append("{\"koreanTTSString\": \"");
             sb.append(inferenceTranslates.get(i).toKorean());
-            sb.append("\", \"english\": \"");
+            sb.append("\", \"englishTTSString\": \"");
             sb.append(inferenceTranslates.get(i).toEnglish());
-            sb.append("\", \"alert\": \"");
+            sb.append("\", \"needAlert\": \"");
             sb.append(inferenceTranslates.get(i).isAlert());
 
             if (i != inferenceTranslates.size() - 1) {

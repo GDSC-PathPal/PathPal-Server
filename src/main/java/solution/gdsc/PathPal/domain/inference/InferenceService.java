@@ -28,7 +28,7 @@ public class InferenceService {
 
     private static Label getLabel(Inference inference) {
         String name = inference.name();
-        return Label.valueOf(name.toUpperCase());
+        return Label.valueOf(name);
     }
 
     private Direction getDirection(Inference inference) {
