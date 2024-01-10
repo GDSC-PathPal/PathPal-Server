@@ -1,6 +1,10 @@
 package solution.gdsc.PathPal.domain.inference;
 
 import org.junit.jupiter.api.Test;
+import solution.gdsc.PathPal.domain.inference.domain.Inference;
+import solution.gdsc.PathPal.domain.inference.service.InferenceService;
+import solution.gdsc.PathPal.domain.inference.service.InferenceTranslate;
+import solution.gdsc.PathPal.global.util.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;

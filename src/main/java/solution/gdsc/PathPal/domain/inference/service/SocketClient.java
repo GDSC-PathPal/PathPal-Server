@@ -1,7 +1,8 @@
-package solution.gdsc.PathPal.domain.inference;
+package solution.gdsc.PathPal.domain.inference.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import solution.gdsc.PathPal.domain.inference.domain.Inference;
 
 import java.io.*;
 import java.net.Socket;

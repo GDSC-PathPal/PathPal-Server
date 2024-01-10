@@ -1,4 +1,6 @@
-package solution.gdsc.PathPal.domain.inference;
+package solution.gdsc.PathPal.global.util;
+
+import solution.gdsc.PathPal.domain.inference.service.InferenceTranslate;
 
 import java.util.List;
 

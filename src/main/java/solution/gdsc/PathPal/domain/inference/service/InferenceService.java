@@ -1,6 +1,9 @@
-package solution.gdsc.PathPal.domain.inference;
+package solution.gdsc.PathPal.domain.inference.service;
 
 import org.springframework.stereotype.Service;
+import solution.gdsc.PathPal.domain.inference.domain.Direction;
+import solution.gdsc.PathPal.domain.inference.domain.Inference;
+import solution.gdsc.PathPal.domain.inference.domain.Label;
 
 import java.util.ArrayList;
 import java.util.Collections;

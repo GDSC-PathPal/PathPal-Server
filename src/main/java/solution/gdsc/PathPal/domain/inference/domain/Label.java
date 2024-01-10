@@ -1,4 +1,4 @@
-package solution.gdsc.PathPal.domain.inference;
+package solution.gdsc.PathPal.domain.inference.domain;
 
 import lombok.RequiredArgsConstructor;
 

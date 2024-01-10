@@ -1,7 +1,9 @@
-package solution.gdsc.PathPal.domain.inference;
+package solution.gdsc.PathPal.domain.inference.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import solution.gdsc.PathPal.domain.inference.domain.Direction;
+import solution.gdsc.PathPal.domain.inference.domain.Label;
 
 @AllArgsConstructor
 public class InferenceTranslate implements Comparable<InferenceTranslate> {
