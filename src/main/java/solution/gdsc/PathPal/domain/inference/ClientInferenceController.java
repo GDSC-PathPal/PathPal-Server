@@ -1,6 +1,5 @@
 package solution.gdsc.PathPal.domain.inference;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -16,10 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ClientInferenceController extends BinaryWebSocketHandler {
 
-    @Value("${image.path}")
-    private String path;
-
-    //@Value("${ML.hostName}")
     private String hostName = "127.0.0.1";
     private int port = 9999;
 
@@ -43,14 +38,13 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
     }
 
     @Override
-    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         byte[] bytes = message.getPayload().array();
 
         String responseMessage = "";
         try {
             List<Inference> inferences = socketClient.inferenceImage(bytes);
             List<InferenceTranslate> inferenceTranslates = inferenceService.convertInference(inferences);
-
             responseMessage = JsonUtil.toJsonFormat(inferenceTranslates);
         } catch (Exception e) {
             responseMessage = "추론실패";
