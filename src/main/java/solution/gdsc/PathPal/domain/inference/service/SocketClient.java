@@ -33,7 +33,7 @@ public class SocketClient {
     }
 
     private void socketConnect() throws IOException {
-        if (this.socket.isConnected()) {
+        if (this.socket != null && this.socket.isConnected()) {
             this.socket.close();
         }
         this.socket = new Socket(hostName, port);
