@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException", e);
-        return ErrorResponse.toResponseEntity(ErrorCode.INVALID_VALUE, e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
+        return ErrorResponse.toResponseEntity(ErrorCode.INVALID_VALUE, e.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
     }
 
     /**

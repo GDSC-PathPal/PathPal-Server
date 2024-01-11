@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class InferenceService {
 
-    private final Double confidenceThreshold = 0.3;
+    private final double confidenceThreshold = 0.0; // TODO : 임시로 0.0으로 설정
 
     public List<InferenceTranslate> convertInference(List<Inference> inferences) {
         List<InferenceTranslate> result = new ArrayList<>();

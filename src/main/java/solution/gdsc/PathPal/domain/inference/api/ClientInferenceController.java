@@ -1,5 +1,6 @@
 package solution.gdsc.PathPal.domain.inference.api;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Profile("!test")
 public class ClientInferenceController extends BinaryWebSocketHandler {
 
     private final String hostName = "127.0.0.1";
@@ -30,14 +32,14 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
     public ClientInferenceController(InferenceService inferenceService) {
         this.inferenceService = inferenceService;
         try {
-            this.socketClient = new SocketClient(hostName, port);
+            this.socketClient = new SocketClient(hostName, port, 2000);
         } catch (IOException e) {
             throw new RuntimeException("SocketClient 생성 실패", e);
         }
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) {
         session.setBinaryMessageSizeLimit(1024 * 1024 * 10);
         sessions.add(session);
     }
@@ -52,19 +54,21 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
             List<InferenceTranslate> inferenceTranslates = inferenceService.convertInference(inferences);
             responseMessage = JsonUtil.toJsonFormat(inferenceTranslates);
         } catch (Exception e) {
-            responseMessage = "추론실패";
+            System.err.println("추론 실패");
+            responseMessage = "[]";
         }
+
         try {
             System.out.println("전송 메시지: " + responseMessage);
             session.sendMessage(new TextMessage(responseMessage));
         } catch (IOException e) {
-            System.out.println("전송실패");
+            System.err.println("전송실패");
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessions.remove(session);
     }
 }
