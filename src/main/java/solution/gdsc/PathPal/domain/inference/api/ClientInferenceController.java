@@ -1,6 +1,5 @@
 package solution.gdsc.PathPal.domain.inference.api;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -19,7 +18,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@Profile("!test")
 public class ClientInferenceController extends BinaryWebSocketHandler {
 
     private final String hostName = "127.0.0.1";
@@ -31,11 +29,7 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
 
     public ClientInferenceController(InferenceService inferenceService) {
         this.inferenceService = inferenceService;
-        try {
-            this.socketClient = new SocketClient(hostName, port, 2000);
-        } catch (IOException e) {
-            throw new RuntimeException("SocketClient 생성 실패", e);
-        }
+        this.socketClient = new SocketClient(hostName, port, 2000);
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class SocketClient {
     private BufferedInputStream bis;
     private BufferedOutputStream bos;
 
-    public SocketClient(String hostName, int port, int timeout) throws IOException {
+    public SocketClient(String hostName, int port, int timeout) {
         this.port = port;
         this.timeout = timeout;
         this.hostName = hostName;
@@ -32,18 +33,32 @@ public class SocketClient {
         socketConnect();
     }
 
-    private void socketConnect() throws IOException {
-        if (this.socket != null && this.socket.isConnected()) {
-            this.socket.close();
+    private void socketConnect() {
+        if (this.socket != null) {
+            if (socket.isConnected() && !socket.isClosed()) {
+                try {
+                    this.socket.close();
+                } catch (IOException e) {
+                }
+            }
         }
-        this.socket = new Socket(hostName, port);
-        this.socket.setSoTimeout(timeout);
-        this.bos = new BufferedOutputStream(socket.getOutputStream());
-        this.bis = new BufferedInputStream(socket.getInputStream());
+        this.socket = new Socket();
+        try {
+            this.socket.setSoTimeout(timeout);
+        } catch (IOException e) {
+        }
+
+        try {
+            this.socket.connect(new InetSocketAddress(hostName, port), timeout);
+            this.bos = new BufferedOutputStream(socket.getOutputStream());
+            this.bis = new BufferedInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            System.err.println("소켓 연결 실패. 프로그램을 종료합니다.");
+            System.exit(1);
+        }
     }
 
     public List<Inference> inferenceImage(byte[] file) {
-
         try {
             // 1. Send File Size
             System.out.println("파일 사이즈 전송:" + file.length);
@@ -73,13 +88,8 @@ public class SocketClient {
         } catch (SocketTimeoutException e) {
             System.err.println("소켓 타임아웃 발생");
             System.err.println("소켓 재연결 시도");
-            try {
-                socketConnect();
-                return inferenceImage(file);
-            } catch (IOException ioException) {
-                System.err.println("소켓 재연결 실패");
-                return new ArrayList<>();
-            }
+            socketConnect();
+            return inferenceImage(file);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
