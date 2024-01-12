@@ -68,7 +68,7 @@ public class SocketClient {
             bos.flush();
 
             // 2. receive data
-            bis.read(readByteArray);
+            int k = bis.read(readByteArray);
 
             // 3. send image
             System.out.println("이미지 전송 " + file.length);
