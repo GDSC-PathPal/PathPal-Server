@@ -43,17 +43,18 @@ public class SocketClient {
             }
         }
         this.socket = new Socket();
-        try {
-            this.socket.setSoTimeout(timeout);
-        } catch (IOException e) {
-        }
+//        try {
+//            this.socket.setSoTimeout(timeout);
+//        } catch (IOException e) {
+//        }
 
         try {
-            this.socket.connect(new InetSocketAddress(hostName, port), timeout);
+            //this.socket.connect(new InetSocketAddress(hostName, port), timeout);
+            this.socket.connect(new InetSocketAddress(hostName, port));
             this.bos = new BufferedOutputStream(socket.getOutputStream());
             this.bis = new BufferedInputStream(socket.getInputStream());
         } catch (IOException e) {
-            System.err.println("소켓 연결 실패. 프로그램을 종료합니다.");
+            System.out.println("소켓 연결 실패. 프로그램을 종료합니다.");
             System.exit(1);
         }
     }
@@ -86,8 +87,8 @@ public class SocketClient {
             });
 
         } catch (SocketTimeoutException e) {
-            System.err.println("소켓 타임아웃 발생");
-            System.err.println("소켓 재연결 시도");
+            System.out.println("소켓 타임아웃 발생");
+            System.out.println("소켓 재연결 시도");
             socketConnect();
             return inferenceImage(file);
         } catch (Exception e) {

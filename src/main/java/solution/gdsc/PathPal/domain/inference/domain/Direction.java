@@ -1,8 +1,8 @@
 package solution.gdsc.PathPal.domain.inference.domain;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum Direction {
     LEFT("왼쪽", "left"),
     CENTER("중앙", "center"),
