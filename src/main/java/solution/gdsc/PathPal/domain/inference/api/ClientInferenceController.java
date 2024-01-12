@@ -45,8 +45,11 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
         String responseMessage = "";
         try {
             List<Inference> inferences = socketClient.inferenceImage(bytes);
+            System.out.println("Inference 변환 성공");
             List<InferenceTranslate> inferenceTranslates = inferenceService.convertInference(inferences);
+            System.out.println("Translate 성공");
             responseMessage = JsonUtil.toJsonFormat(inferenceTranslates);
+            System.out.println("json 변환 성공");
         } catch (Exception e) {
             System.err.println("추론 실패");
             responseMessage = "[]";

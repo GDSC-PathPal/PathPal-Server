@@ -21,7 +21,14 @@ public class InferenceService {
                 continue;
             }
 
-            Label label = getLabel(inference);
+            // TODO
+            Label label = null;
+            try {
+                label = getLabel(inference);
+            } catch (Exception e) {
+                label = Label.temporary_label;
+            }
+
             Direction direction = getDirection(inference);
 
             InferenceTranslate inferenceTranslate = new InferenceTranslate(inference.alert(), label, direction);

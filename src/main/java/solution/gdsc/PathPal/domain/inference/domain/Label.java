@@ -55,6 +55,9 @@ public enum Label {
     beverage_vending_machine("음료 자판기", "Beverage vending machine"),
     trash_can("쓰레기통", "Trash can"),
 
+
+    temporary_label("[임시 라벨입니다]", "[temporary label]"), // TODO
+
     ;
     private final String korean;
     private final String english;
