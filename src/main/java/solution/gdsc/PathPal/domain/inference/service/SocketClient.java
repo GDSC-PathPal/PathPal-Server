@@ -23,6 +23,7 @@ public class SocketClient {
     private Socket socket;
     private BufferedInputStream bis;
     private BufferedOutputStream bos;
+    private DataOutputStream dataOutputStream;
 
     public SocketClient(String hostName, int port, int timeout) {
         this.port = port;
@@ -44,7 +45,7 @@ public class SocketClient {
         }
         this.socket = new Socket();
         try {
-            this.socket.setSoTimeout(timeout);
+            this.socket.setSoTimeout(timeout * 10);
         } catch (IOException e) {
         }
 
@@ -53,22 +54,23 @@ public class SocketClient {
             //this.socket.connect(new InetSocketAddress(hostName, port));
             this.bos = new BufferedOutputStream(socket.getOutputStream());
             this.bis = new BufferedInputStream(socket.getInputStream());
+            this.dataOutputStream = new DataOutputStream(bos);
         } catch (IOException e) {
             System.out.println("소켓 연결 실패. 프로그램을 종료합니다.");
             System.exit(1);
         }
+        System.out.println("소켓 연결 성공");
     }
 
     public List<Inference> inferenceImage(byte[] file) {
         try {
             // 1. Send File Size
             System.out.println("파일 사이즈 전송:" + file.length);
-            DataOutputStream dataOutputStream = new DataOutputStream(bos);
             dataOutputStream.writeInt(file.length);
             bos.flush();
 
             // 2. receive data
-            int k = bis.read(readByteArray);
+            bis.read(readByteArray);
 
             // 3. send image
             System.out.println("이미지 전송 " + file.length);
