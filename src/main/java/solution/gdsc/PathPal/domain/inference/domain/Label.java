@@ -56,7 +56,7 @@ public enum Label {
     trash_can("쓰레기통", "Trash can"),
 
 
-    temporary_label("[임시 라벨입니다]", "[temporary label]"), // TODO
+    temporary_label("[임시 라벨]", "[temporary label]"), // TODO
 
     ;
     private final String korean;
