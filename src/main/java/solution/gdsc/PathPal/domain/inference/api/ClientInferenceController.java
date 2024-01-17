@@ -1,11 +1,9 @@
 package solution.gdsc.PathPal.domain.inference.api;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 import solution.gdsc.PathPal.domain.inference.domain.Inference;
 import solution.gdsc.PathPal.domain.inference.service.InferenceService;
 import solution.gdsc.PathPal.domain.inference.service.InferenceTranslate;
@@ -17,10 +15,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
-public class ClientInferenceController extends BinaryWebSocketHandler {
+//@Component
+public class ClientInferenceController extends WebSocketClientController {
 
     private final String hostName = "127.0.0.1";
+    //private final String hostName = "34.22.89.175";
     private final int port = 9999;
 
     private final InferenceService inferenceService;
@@ -36,6 +35,14 @@ public class ClientInferenceController extends BinaryWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) {
         session.setBinaryMessageSizeLimit(1024 * 1024 * 10);
         sessions.add(session);
+
+
+        List<String> time = session.getHandshakeHeaders().get("time");
+        if (time == null) {
+            System.err.println("time 헤더가 없습니다.");
+        }
+        System.out.println("time.size(): " + time.size());
+        System.out.println("time: " + time.get(0));
     }
 
     @Override
