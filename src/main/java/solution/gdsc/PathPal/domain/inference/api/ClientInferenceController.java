@@ -1,6 +1,5 @@
 package solution.gdsc.PathPal.domain.inference.api;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
+//@Component
 public class ClientInferenceController extends WebSocketClientController {
 
     private final String hostName = "127.0.0.1";

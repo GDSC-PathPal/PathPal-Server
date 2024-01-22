@@ -44,7 +44,7 @@ public class TestClientController extends WebSocketClientController {
 
         long currentTimeMillis = System.currentTimeMillis();
         session.setBinaryMessageSizeLimit(1024 * 1024 * 10);
-        sessions.put(session, new SessionInfo(totalExpectedMinutes, currentTimeMillis));
+        sessions.put(session, new SessionInfo(null, currentTimeMillis, totalExpectedMinutes));
     }
 
     @Override
@@ -59,9 +59,9 @@ public class TestClientController extends WebSocketClientController {
 
             try {
                 session.close();
-                return;
             } catch (IOException e) {
             }
+            return;
         }
 
         String responseMessage;

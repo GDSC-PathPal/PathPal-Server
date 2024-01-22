@@ -15,19 +15,19 @@ public class ImageInference {
 
     private String imagePath;
 
-    @Embedded
-    private InferenceResult inferenceResult;
+//    @Embedded
+//    private InferenceResult inferenceResult;
+
+    private String sendMessage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
 
-    public ImageInference(String imagePath, Client client) {
-        this.imagePath = imagePath;
+    public ImageInference(String imagePath, Client client, String sendMessage) {
         this.client = client;
+        this.imagePath = imagePath;
+        this.sendMessage = sendMessage;
     }
 
-    public void updateInferenceResult(InferenceResult inferenceResult) {
-        this.inferenceResult = inferenceResult;
-    }
 }

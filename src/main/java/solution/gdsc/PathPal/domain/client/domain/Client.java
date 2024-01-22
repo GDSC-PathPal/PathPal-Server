@@ -13,23 +13,23 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private long expectedSeconds;
-    private long realSeconds;
+    @Column(nullable = false)
     private int rating;
+
+    @Column(nullable = false)
+    private long expectedSeconds;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private CloseStatus closeStatus;
 
     public Client(long expectedSeconds) {
-        this.expectedSeconds = expectedSeconds;
-        this.closeStatus = CloseStatus.OPEN;
-        this.realSeconds = -1;
         this.rating = -1;
+        this.closeStatus = CloseStatus.OPEN;
+        this.expectedSeconds = expectedSeconds;
     }
 
-    public void updateResult(long realSeconds, int rating, CloseStatus closeStatus) {
-        this.realSeconds = realSeconds;
+    public void updateResult(int rating, CloseStatus closeStatus) {
         this.rating = rating;
         this.closeStatus = closeStatus;
     }
