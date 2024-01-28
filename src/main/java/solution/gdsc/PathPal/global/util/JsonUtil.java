@@ -18,8 +18,7 @@ public class JsonUtil {
             sb.append("\", \"englishTTSString\": \"");
             sb.append(inferenceTranslates.get(i).toEnglish());
             sb.append("\", \"needAlert\": \"");
-            //sb.append(inferenceTranslates.get(i).isAlert());
-            sb.append("true");
+            sb.append(inferenceTranslates.get(i).isAlert());
 
             if (i != inferenceTranslates.size() - 1) {
                 sb.append("\"},");
