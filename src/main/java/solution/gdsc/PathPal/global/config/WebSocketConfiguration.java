@@ -5,15 +5,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import solution.gdsc.PathPal.SocketHandlerTest;
+import solution.gdsc.PathPal.domain.inference.api.WebSocketClientController;
 
 @Configuration
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
     @Autowired
-    //private WebSocketClientController clientInferenceController;
-    private SocketHandlerTest clientInferenceController;
+    private WebSocketClientController clientInferenceController;
+    //private SocketHandlerTest clientInferenceController;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
