@@ -11,16 +11,21 @@ import solution.gdsc.PathPal.domain.inference.service.InferenceTranslate;
 import solution.gdsc.PathPal.domain.inference.service.SocketClient;
 import solution.gdsc.PathPal.global.util.JsonUtil;
 
+import javax.imageio.stream.FileImageOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class ClientInferenceController extends WebSocketClientController {
 
     private final String hostName = "127.0.0.1";
     private final int port = 9999;
+    private String path = "/home/hsk4991149/static/image/";
+    private final AtomicInteger imageNumber = new AtomicInteger(1);
 
     private final InferenceService inferenceService;
     private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
@@ -52,6 +57,19 @@ public class ClientInferenceController extends WebSocketClientController {
         } catch (Exception e) {
             System.err.println("추론 실패");
             responseMessage = "[]";
+        }
+        try {
+            int imageId = imageNumber.get();
+            String fileFullName = path + imageId + ".jpeg";
+            System.out.println(fileFullName);
+
+            FileImageOutputStream imageOutput = new FileImageOutputStream(new File(fileFullName));
+            imageOutput.write(bytes, 0, bytes.length);
+            imageOutput.close();
+            imageNumber.incrementAndGet();
+            System.out.println("이미지 저장 성공. id = " + imageId);
+        } catch (Exception e) {
+            System.out.println("이미지 저장 실패");
         }
 
         try {
