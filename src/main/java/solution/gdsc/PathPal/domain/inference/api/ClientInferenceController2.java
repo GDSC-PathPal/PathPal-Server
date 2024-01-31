@@ -50,6 +50,7 @@ public class ClientInferenceController2 extends WebSocketClientController {
             }
             return;
         }
+        System.out.println("time 헤더: " + time.get(0));
 
         int totalExpectedMinutes;
         try {
