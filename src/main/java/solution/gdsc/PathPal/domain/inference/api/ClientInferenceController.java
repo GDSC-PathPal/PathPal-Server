@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
+//@Component
 public class ClientInferenceController extends WebSocketClientController {
 
     private final String hostName = "127.0.0.1";

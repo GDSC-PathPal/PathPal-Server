@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class ClientInferenceController2 extends WebSocketClientController {
 
@@ -76,22 +76,22 @@ public class ClientInferenceController2 extends WebSocketClientController {
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         byte[] bytes = message.getPayload().array();
-        if (bytes.length == 1) {
-            for (int i = 0; i <= 5; i++) {
-                if (bytes[0] == scoreByte[i]) {
-                    System.out.println("점수 : " + i);
-                    Client client = sessions.get(session).getClient();
-                    client.updateResult(i, solution.gdsc.PathPal.domain.client.domain.CloseStatus.NORMAL);
-                    clientRepository.save(client);
-                }
-            }
-
-            try {
-                session.close();
-            } catch (IOException e) {
-            }
-            return;
-        }
+//        if (bytes.length == 1) {
+//            for (int i = 0; i <= 5; i++) {
+//                if (bytes[0] == scoreByte[i]) {
+//                    System.out.println("점수 : " + i);
+//                    Client client = sessions.get(session).getClient();
+//                    client.updateResult(i, solution.gdsc.PathPal.domain.client.domain.CloseStatus.NORMAL);
+//                    clientRepository.save(client);
+//                }
+//            }
+//
+//            try {
+//                session.close();
+//            } catch (IOException e) {
+//            }
+//            return;
+//        }
 
         String responseMessage = "";
         try {
@@ -138,9 +138,15 @@ public class ClientInferenceController2 extends WebSocketClientController {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         if (status.equalsCode(CloseStatus.NORMAL)) {
             System.out.println("정상 종료");
+            Client client = sessions.get(session).getClient();
+            client.updateResult(-1, solution.gdsc.PathPal.domain.client.domain.CloseStatus.NORMAL);
+            clientRepository.save(client);
         }
         else {
             System.out.println("비정상 종료. reason = " + status.getReason() + "\n");
+            Client client = sessions.get(session).getClient();
+            client.updateResult(-1, solution.gdsc.PathPal.domain.client.domain.CloseStatus.convert(status));
+            clientRepository.save(client);
         }
         sessions.remove(session);
     }
