@@ -1,7 +1,6 @@
 package solution.gdsc.PathPal.domain.inference.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
@@ -36,8 +35,8 @@ public class ClientInferenceController2 extends WebSocketClientController {
     private final ImageInferenceRepository imageInferenceRepository;
     private final SocketClient socketClient = new SocketClient("127.0.0.1", 9999, 2000);
 
-    @Value("${image.path}")
-    private String path;
+    //@Value("${image.path}")
+    private String path = "/home/hsk4991149/static/image/";
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
