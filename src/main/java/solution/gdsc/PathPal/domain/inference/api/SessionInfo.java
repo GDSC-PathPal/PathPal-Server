@@ -10,7 +10,7 @@ public class SessionInfo {
 
     Client client;
     long recentlySaveTime;
-    int totalExpectedMinutes;
+    int totalExpectedSeconds;
 
     public void updateRecentlySaveTime(long updateValue) {
         this.recentlySaveTime = updateValue;

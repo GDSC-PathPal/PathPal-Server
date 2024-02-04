@@ -38,6 +38,8 @@ public class ClientInferenceController2 extends WebSocketClientController {
     //@Value("${image.path}")
     private String path = "/home/hsk4991149/static/image/";
 
+    private int imageId = 1;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         List<String> time = session.getHandshakeHeaders().get("time");
@@ -52,9 +54,9 @@ public class ClientInferenceController2 extends WebSocketClientController {
         }
         System.out.println("time 헤더: " + time.get(0));
 
-        int totalExpectedMinutes;
+        int totalExpectedSeconds;
         try {
-            totalExpectedMinutes = Integer.parseInt(time.get(0));
+            totalExpectedSeconds = Integer.parseInt(time.get(0));
         } catch (NumberFormatException e) {
             System.err.println("time 헤더가 숫자가 아닙니다.");
             try {
@@ -65,12 +67,12 @@ public class ClientInferenceController2 extends WebSocketClientController {
             return;
         }
 
-        Client client = new Client(totalExpectedMinutes * 1000L);
+        Client client = new Client(totalExpectedSeconds);
         clientRepository.save(client);
 
         session.setBinaryMessageSizeLimit(1024 * 1024 * 10);
         long currentTimeMillis = System.currentTimeMillis();
-        sessions.put(session, new SessionInfo(client, currentTimeMillis, totalExpectedMinutes));
+        sessions.put(session, new SessionInfo(client, currentTimeMillis, totalExpectedSeconds));
     }
 
     @Override
@@ -111,7 +113,9 @@ public class ClientInferenceController2 extends WebSocketClientController {
         SessionInfo sessionInfo = sessions.get(session);
         if (currentTimeMillis - sessionInfo.recentlySaveTime > savePeriodMilliSeconds) {
 
-            String fileFullName = path + sessionInfo.getClient().getId() + "T" + currentTimeMillis + ".jpeg";
+            //String fileFullName = path + sessionInfo.getClient().getId() + "T" + currentTimeMillis + ".jpeg";
+            String fileFullName = path + imageId;
+            imageId++;
             try (FileImageOutputStream imageOutput = new FileImageOutputStream(new File(fileFullName))) {
                 imageOutput.write(bytes, 0, bytes.length);
 
@@ -119,7 +123,7 @@ public class ClientInferenceController2 extends WebSocketClientController {
                 imageInferenceRepository.save(imageInference);
 
                 sessionInfo.updateRecentlySaveTime(currentTimeMillis);
-                System.out.println("데이터 저장 (currentTimeMillis: " + currentTimeMillis + ")");
+                System.out.println("데이터 저장 (currentTimeMillis: " + currentTimeMillis + "). imageId = " + fileFullName);
             } catch (Exception e) {
                 System.err.println("이미지 저장 실패");
             }

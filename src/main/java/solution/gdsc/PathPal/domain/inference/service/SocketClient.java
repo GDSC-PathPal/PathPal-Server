@@ -51,7 +51,6 @@ public class SocketClient {
 
         try {
             this.socket.connect(new InetSocketAddress(hostName, port), timeout);
-            //this.socket.connect(new InetSocketAddress(hostName, port));
             this.bos = new BufferedOutputStream(socket.getOutputStream());
             this.bis = new BufferedInputStream(socket.getInputStream());
             this.dataOutputStream = new DataOutputStream(bos);
@@ -78,7 +77,11 @@ public class SocketClient {
             bos.flush();
 
             // 4. receive data
-            int readByte = bis.read(readByteArray);
+            int readByte;
+            while (true) {
+                readByte = bis.read(readByteArray);
+                if (readByte > 0) break;
+            }
             System.out.println("read Byte size = " + readByte);
 
             // 5. convert to inference
