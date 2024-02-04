@@ -24,6 +24,7 @@ public enum Label {
     // 도보 위험 요소
     sidegap_out("포장 도보 외부 사이드 갭", "Paved walkway outside side gap"),
     steepramp("경사로", "Steep ramp"),
+    bollard("볼라드", "Bollard"),
 
     //특수 도보
     brailleblock_dot("점자 블럭", "Braille block"),
