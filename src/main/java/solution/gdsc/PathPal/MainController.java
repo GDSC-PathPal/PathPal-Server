@@ -32,7 +32,7 @@ public class MainController {
 
     @GetMapping("/image/{imageId}")
     @Operation(summary = "이미지 조회", description = "WebSocket으로 저장된 이미지를 조회합니다.(Content-Type: image/jpeg)")
-    public ResponseEntity<Resource> viewImg(@PathVariable(name = "imageId") Integer imageId) throws IOException {
+    public ResponseEntity<Resource> viewImg(@PathVariable(name = "imageId") String imageId) throws IOException {
         final String fileFullPath = path + imageId + ".jpeg";
         File file = new File(fileFullPath);
 

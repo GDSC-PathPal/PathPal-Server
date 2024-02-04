@@ -38,10 +38,20 @@ public class ClientInferenceController2 extends WebSocketClientController {
     //@Value("${image.path}")
     private String path = "/home/hsk4991149/static/image/";
 
-    private int imageId = 1;
-
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
+        Integer totalExpectedSeconds = parseTimeHeader(session);
+        if (totalExpectedSeconds == null) return;
+
+        Client client = new Client(totalExpectedSeconds);
+        clientRepository.save(client);
+
+        session.setBinaryMessageSizeLimit(1024 * 1024 * 10);
+        long currentTimeMillis = System.currentTimeMillis();
+        sessions.put(session, new SessionInfo(client, currentTimeMillis, totalExpectedSeconds));
+    }
+
+    private Integer parseTimeHeader(WebSocketSession session) {
         List<String> time = session.getHandshakeHeaders().get("time");
         if (time == null) {
             System.err.println("time 헤더가 없습니다.");
@@ -50,7 +60,7 @@ public class ClientInferenceController2 extends WebSocketClientController {
                 session.close();
             } catch (IOException e) {
             }
-            return;
+            return null;
         }
         System.out.println("time 헤더: " + time.get(0));
 
@@ -64,15 +74,9 @@ public class ClientInferenceController2 extends WebSocketClientController {
                 session.close();
             } catch (IOException e1) {
             }
-            return;
+            return null;
         }
-
-        Client client = new Client(totalExpectedSeconds);
-        clientRepository.save(client);
-
-        session.setBinaryMessageSizeLimit(1024 * 1024 * 10);
-        long currentTimeMillis = System.currentTimeMillis();
-        sessions.put(session, new SessionInfo(client, currentTimeMillis, totalExpectedSeconds));
+        return totalExpectedSeconds;
     }
 
     @Override
@@ -113,9 +117,7 @@ public class ClientInferenceController2 extends WebSocketClientController {
         SessionInfo sessionInfo = sessions.get(session);
         if (currentTimeMillis - sessionInfo.recentlySaveTime > savePeriodMilliSeconds) {
 
-            //String fileFullName = path + sessionInfo.getClient().getId() + "T" + currentTimeMillis + ".jpeg";
-            String fileFullName = path + imageId;
-            imageId++;
+            String fileFullName = path + sessionInfo.getClient().getId() + "T" + currentTimeMillis + ".jpeg";
             try (FileImageOutputStream imageOutput = new FileImageOutputStream(new File(fileFullName))) {
                 imageOutput.write(bytes, 0, bytes.length);
 
