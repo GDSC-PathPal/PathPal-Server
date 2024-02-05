@@ -10,11 +10,11 @@ import solution.gdsc.PathPal.domain.client.domain.Client;
 import solution.gdsc.PathPal.domain.client.domain.ImageInference;
 import solution.gdsc.PathPal.domain.client.repository.ClientRepository;
 import solution.gdsc.PathPal.domain.client.repository.ImageInferenceRepository;
+import solution.gdsc.PathPal.domain.inference.domain.Direction;
 import solution.gdsc.PathPal.domain.inference.domain.Inference;
+import solution.gdsc.PathPal.domain.inference.domain.Label;
 import solution.gdsc.PathPal.domain.inference.service.InferenceService;
-import solution.gdsc.PathPal.domain.inference.service.InferenceTranslate;
 import solution.gdsc.PathPal.domain.inference.service.SocketClient;
-import solution.gdsc.PathPal.global.util.JsonUtil;
 
 import javax.imageio.stream.FileImageOutputStream;
 import java.io.File;
@@ -103,13 +103,78 @@ public class ClientInferenceController2 extends WebSocketClientController {
         try {
             List<Inference> inferences = socketClient.inferenceImage(bytes);
             System.out.println("Inference 변환 성공");
-            List<InferenceTranslate> inferenceTranslates = inferenceService.convertInference(inferences);
-            System.out.println("Translate 성공");
-            responseMessage = JsonUtil.toJsonFormat(inferenceTranslates);
-            System.out.println("json 변환 성공");
+//            List<InferenceTranslate> inferenceTranslates = inferenceService.convertInference(inferences);
+//            System.out.println("Translate 성공");
+//            responseMessage = JsonUtil.toJsonFormat(inferenceTranslates);
+//            System.out.println("json 변환 성공");
+
+            StringBuilder left = new StringBuilder();
+            StringBuilder center = new StringBuilder();
+            StringBuilder right = new StringBuilder();
+
+            final double confidenceThreshold = 0.3;
+
+            for (Inference inference : inferences) {
+                if (inference.confidence() < confidenceThreshold) {
+                    continue;
+                }
+                Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
+                if (direction == Direction.LEFT) {
+                    if (left.isEmpty()) {
+                        left.append(direction.toKorean()).append("에 ");
+                    }
+                    else {
+                        left.append(", ");
+                    }
+                    String korean = Label.fromName(inference.name()).toKorean();
+                    left.append(korean);
+                }
+                else if (direction == Direction.CENTER) {
+                    if (center.isEmpty()) {
+                        center.append(direction.toKorean()).append("에 ");
+                    }
+                    else {
+                        center.append(", ");
+                    }
+                    String korean = Label.fromName(inference.name()).toKorean();
+                    center.append(korean);
+                }
+                else {
+                    if (right.isEmpty()) {
+                        right.append(direction.toKorean()).append("에 ");
+                    }
+                    else {
+                        right.append(", ");
+                    }
+                    String korean = Label.fromName(inference.name()).toKorean();
+                    right.append(korean);
+                }
+            }
+
+            if (!left.isEmpty() && !center.isEmpty() && right.isEmpty()) {
+                left.append(", ");
+            }
+            else if (!left.isEmpty() && center.isEmpty() && !right.isEmpty()) {
+                left.append(", ");
+            }
+            else if (left.isEmpty() && !center.isEmpty() && !right.isEmpty()) {
+                center.append(", ");
+            }
+            else if (!left.isEmpty() && !center.isEmpty() && !right.isEmpty()) {
+                left.append(", ");
+                center.append(", ");
+            }
+
+            if (!left.isEmpty() || !center.isEmpty() || !right.isEmpty()) {
+                responseMessage = left.append(center).append(right).toString();
+            }
+            else {
+                responseMessage = "";
+            }
+
         } catch (Exception e) {
             System.err.println("추론 실패");
-            responseMessage = "[]";
+            responseMessage = "";
         }
 
         long currentTimeMillis = System.currentTimeMillis();
