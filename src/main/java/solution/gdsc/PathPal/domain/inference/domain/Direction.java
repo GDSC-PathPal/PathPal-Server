@@ -11,6 +11,18 @@ public enum Direction {
     private final String korean;
     private final String english;
 
+    public static Direction fromCenterPoint(double centerPointX) {
+        if (centerPointX < 0.333) {
+            return Direction.LEFT;
+        }
+        else if (centerPointX < 0.666) {
+            return Direction.CENTER;
+        }
+        else {
+            return Direction.RIGHT;
+        }
+    }
+
     public String toKorean() {
         return korean;
     }
