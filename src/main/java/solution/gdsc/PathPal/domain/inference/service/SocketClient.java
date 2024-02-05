@@ -78,10 +78,9 @@ public class SocketClient {
 
             // 4. receive data
             int readByte;
-            while (true) {
+            do {
                 readByte = bis.read(readByteArray);
-                if (readByte > 0) break;
-            }
+            } while (readByte <= 0);
             System.out.println("read Byte size = " + readByte);
 
             // 5. convert to inference
