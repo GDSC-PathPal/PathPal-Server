@@ -24,4 +24,70 @@ public class InferenceService {
                 .toList();
     }
 
+    public String convertInference2(List<Inference> inferences) {
+        StringBuilder left = new StringBuilder();
+        StringBuilder center = new StringBuilder();
+        StringBuilder right = new StringBuilder();
+
+        final double confidenceThreshold = 0.3;
+
+        for (Inference inference : inferences) {
+            if (inference.confidence() < confidenceThreshold) {
+                continue;
+            }
+            Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
+            if (direction == Direction.LEFT) {
+                if (left.isEmpty()) {
+                    left.append(direction.toKorean()).append("에 ");
+                }
+                else {
+                    left.append(", ");
+                }
+                String korean = Label.fromName(inference.name()).toKorean();
+                left.append(korean);
+            }
+            else if (direction == Direction.CENTER) {
+                if (center.isEmpty()) {
+                    center.append(direction.toKorean()).append("에 ");
+                }
+                else {
+                    center.append(", ");
+                }
+                String korean = Label.fromName(inference.name()).toKorean();
+                center.append(korean);
+            }
+            else {
+                if (right.isEmpty()) {
+                    right.append(direction.toKorean()).append("에 ");
+                }
+                else {
+                    right.append(", ");
+                }
+                String korean = Label.fromName(inference.name()).toKorean();
+                right.append(korean);
+            }
+        }
+
+        if (!left.isEmpty() && !center.isEmpty() && right.isEmpty()) {
+            left.append(", ");
+        }
+        else if (!left.isEmpty() && center.isEmpty() && !right.isEmpty()) {
+            left.append(", ");
+        }
+        else if (left.isEmpty() && !center.isEmpty() && !right.isEmpty()) {
+            center.append(", ");
+        }
+        else if (!left.isEmpty() && !center.isEmpty() && !right.isEmpty()) {
+            left.append(", ");
+            center.append(", ");
+        }
+
+        if (!left.isEmpty() || !center.isEmpty() || !right.isEmpty()) {
+            return left.append(center).append(right).toString();
+        }
+        else {
+            return "";
+        }
+    }
+
 }
