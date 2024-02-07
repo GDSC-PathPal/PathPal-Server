@@ -30,10 +30,13 @@ public class InferenceService {
         StringBuilder right = new StringBuilder();
 
         final double confidenceThreshold = 0.3;
-
+        boolean isAlert = false;
         for (Inference inference : inferences) {
             if (inference.confidence() < confidenceThreshold) {
                 continue;
+            }
+            if (inference.alert()) {
+                isAlert = true;
             }
             Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
             if (direction == Direction.LEFT) {
@@ -82,11 +85,33 @@ public class InferenceService {
             center.append(", ");
         }
 
+        /*
+         sb.append("[");
+        for (int i = 0; i < inferenceTranslates.size(); i++) {
+            sb.append("{\"koreanTTSString\": \"");
+            sb.append(inferenceTranslates.get(i).toKorean());
+            sb.append("\", \"englishTTSString\": \"");
+            sb.append(inferenceTranslates.get(i).toEnglish());
+            sb.append("\", \"needAlert\": \"");
+            sb.append(inferenceTranslates.get(i).isAlert());
+
+            if (i != inferenceTranslates.size() - 1) {
+                sb.append("\"},");
+            }
+            else {
+                sb.append("\"}");
+            }
+        }
+        sb.append("]");
+         */
+
         if (!left.isEmpty() || !center.isEmpty() || !right.isEmpty()) {
-            return left.append(center).append(right).toString();
+            return "[{\"koreanTTSString\"" +
+                    left.append(center).append(right) +
+                    ", \"needAlert\": \"" + isAlert + "\"}]";
         }
         else {
-            return "";
+            return "[]";
         }
     }
 
