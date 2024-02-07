@@ -114,7 +114,7 @@ public class InferenceService {
         if (!left.isEmpty() || !center.isEmpty() || !right.isEmpty()) {
             return "[{\"koreanTTSString\":\"" +
                     left.append(center).append(right) +
-                    "\", \"needAlert\": \"" + isAlert + "\"}]";
+                    " 감지\", \"needAlert\": \"" + isAlert + "\"}]";
         }
         else {
             return "[]";
