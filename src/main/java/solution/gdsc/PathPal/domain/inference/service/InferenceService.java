@@ -106,7 +106,7 @@ public class InferenceService {
          */
 
         if (!left.isEmpty() || !center.isEmpty() || !right.isEmpty()) {
-            return "[{\"koreanTTSString\"" +
+            return "[{\"koreanTTSString\":" +
                     left.append(center).append(right) +
                     ", \"needAlert\": \"" + isAlert + "\"}]";
         }
