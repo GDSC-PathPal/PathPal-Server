@@ -56,22 +56,22 @@ public class HttpClientInferenceController {
         List<Inference> inferences = socketClient.inferenceImage(bytes);
         String responseMessage = inferenceService.convertInference2(inferences);
 
-        long currentTimeMillis = System.currentTimeMillis();
-        if (currentTimeMillis - sessionInfo.recentlySaveTime > savePeriodMilliSeconds) {
-
-            String fileFullName = path + sessionInfo.getClient().getId() + "T" + currentTimeMillis + ".jpeg";
-            try (FileImageOutputStream imageOutput = new FileImageOutputStream(new File(fileFullName))) {
-                imageOutput.write(bytes, 0, bytes.length);
-
-                ImageInference imageInference = new ImageInference(fileFullName, sessionInfo.getClient(), responseMessage);
-                imageInferenceRepository.save(imageInference);
-
-                sessionInfo.updateRecentlySaveTime(currentTimeMillis);
-                System.out.println("데이터 저장 (currentTimeMillis: " + currentTimeMillis + "). imageId = " + fileFullName);
-            } catch (Exception e) {
-                System.err.println("이미지 저장 실패");
-            }
-        }
+//        long currentTimeMillis = System.currentTimeMillis();
+//        if (currentTimeMillis - sessionInfo.recentlySaveTime > savePeriodMilliSeconds) {
+//
+//            String fileFullName = path + sessionInfo.getClient().getId() + "T" + currentTimeMillis + ".jpeg";
+//            try (FileImageOutputStream imageOutput = new FileImageOutputStream(new File(fileFullName))) {
+//                imageOutput.write(bytes, 0, bytes.length);
+//
+//                ImageInference imageInference = new ImageInference(fileFullName, sessionInfo.getClient(), responseMessage);
+//                imageInferenceRepository.save(imageInference);
+//
+//                sessionInfo.updateRecentlySaveTime(currentTimeMillis);
+//                System.out.println("데이터 저장 (currentTimeMillis: " + currentTimeMillis + "). imageId = " + fileFullName);
+//            } catch (Exception e) {
+//                System.err.println("이미지 저장 실패");
+//            }
+//        }
         return responseMessage;
     }
 }
