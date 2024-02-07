@@ -35,9 +35,15 @@ public class InferenceService {
             if (inference.confidence() < confidenceThreshold) {
                 continue;
             }
+            if (inference.name().equals("brailleblock_dot") ||
+                    inference.name().equals("brailleblock_line")) {
+                continue;
+            }
+
             if (inference.alert()) {
                 isAlert = true;
             }
+
             Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
             if (direction == Direction.LEFT) {
                 if (left.isEmpty()) {
