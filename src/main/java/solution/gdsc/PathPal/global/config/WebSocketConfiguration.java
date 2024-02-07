@@ -11,13 +11,13 @@ import solution.gdsc.PathPal.domain.inference.api.WebSocketClientController;
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-    @Autowired
-    private WebSocketClientController clientInferenceController;
+    //@Autowired
+    //private WebSocketClientController clientInferenceController;
     //private SocketHandlerTest clientInferenceController;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(clientInferenceController, "/socket") // Handshake 주소
-                .setAllowedOrigins("*");
+//        registry.addHandler(clientInferenceController, "/socket") // Handshake 주소
+//                .setAllowedOrigins("*");
     }
 }
