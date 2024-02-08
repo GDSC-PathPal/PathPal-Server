@@ -5,7 +5,9 @@ import solution.gdsc.PathPal.domain.inference.domain.Direction;
 import solution.gdsc.PathPal.domain.inference.domain.Inference;
 import solution.gdsc.PathPal.domain.inference.domain.Label;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class InferenceService {
@@ -31,6 +33,8 @@ public class InferenceService {
 
         final double confidenceThreshold = 0.3;
         boolean isAlert = false;
+        Set<LabelAndDirection> labelAndDirections = new HashSet<>();
+
         for (Inference inference : inferences) {
             if (inference.confidence() < confidenceThreshold) {
                 continue;
@@ -40,54 +44,34 @@ public class InferenceService {
                 continue;
             }
 
+            Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
+            Label label = Label.fromName(inference.name());
+
+            LabelAndDirection labelAndDirection = new LabelAndDirection(label, direction);
+            if (labelAndDirections.contains(labelAndDirection)) {
+                continue;
+            }
+            labelAndDirections.add(labelAndDirection);
+
             if (inference.alert()) {
                 isAlert = true;
             }
 
-            Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
             if (direction == Direction.LEFT) {
-                if (left.isEmpty()) {
-                    left.append(direction.toKorean()).append("에 ");
-                }
-                else {
-                    left.append(", ");
-                }
-                String korean = Label.fromName(inference.name()).toKorean();
-                left.append(korean);
+                appendToStringBuilder(left, label, direction);
             }
             else if (direction == Direction.CENTER) {
-                if (center.isEmpty()) {
-                    center.append(direction.toKorean()).append("에 ");
-                }
-                else {
-                    center.append(", ");
-                }
-                String korean = Label.fromName(inference.name()).toKorean();
-                center.append(korean);
+                appendToStringBuilder(center, label, direction);
             }
             else {
-                if (right.isEmpty()) {
-                    right.append(direction.toKorean()).append("에 ");
-                }
-                else {
-                    right.append(", ");
-                }
-                String korean = Label.fromName(inference.name()).toKorean();
-                right.append(korean);
+                appendToStringBuilder(right, label, direction);
             }
         }
 
-        if (!left.isEmpty() && !center.isEmpty() && right.isEmpty()) {
+        if (!left.isEmpty() && !(center.isEmpty() && right.isEmpty())) {
             left.append(", ");
         }
-        else if (!left.isEmpty() && center.isEmpty() && !right.isEmpty()) {
-            left.append(", ");
-        }
-        else if (left.isEmpty() && !center.isEmpty() && !right.isEmpty()) {
-            center.append(", ");
-        }
-        else if (!left.isEmpty() && !center.isEmpty() && !right.isEmpty()) {
-            left.append(", ");
+        if (!center.isEmpty() && !right.isEmpty()) {
             center.append(", ");
         }
 
@@ -111,7 +95,7 @@ public class InferenceService {
         sb.append("]");
          */
 
-        if (!left.isEmpty() || !center.isEmpty() || !right.isEmpty()) {
+        if (!(left.isEmpty() && center.isEmpty() && right.isEmpty())) {
             return "[{\"koreanTTSString\":\"" +
                     left.append(center).append(right) +
                     " 감지\", \"needAlert\": \"" + isAlert + "\"}]";
@@ -119,6 +103,19 @@ public class InferenceService {
         else {
             return "[]";
         }
+    }
+
+    private void appendToStringBuilder(StringBuilder sb, Label label, Direction direction) {
+        if (sb.isEmpty()) {
+            sb.append(direction.toKorean()).append("에 ");
+        }
+        else {
+            sb.append(", ");
+        }
+        sb.append(label.toKorean());
+    }
+
+    private record LabelAndDirection(Label name, Direction direction) {
     }
 
 }
