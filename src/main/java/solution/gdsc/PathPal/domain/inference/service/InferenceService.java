@@ -31,7 +31,7 @@ public class InferenceService {
         StringBuilder center = new StringBuilder();
         StringBuilder right = new StringBuilder();
 
-        final double confidenceThreshold = 0.3;
+        final double confidenceThreshold = 0.5;
         boolean isAlert = false;
         Set<LabelAndDirection> labelAndDirections = new HashSet<>();
 
@@ -40,7 +40,19 @@ public class InferenceService {
                 continue;
             }
             if (inference.name().equals("brailleblock_dot") ||
-                    inference.name().equals("brailleblock_line")) {
+                    inference.name().equals("brailleblock_line") ||
+                    inference.name().equals("flatness_D") ||
+                    inference.name().equals("flatness_E") ||
+                    inference.name().equals("walkway_paved") ||
+                    inference.name().equals("walkway_block") ||
+                    inference.name().equals("paved_state_broken") ||
+                    inference.name().equals("paved_state_normal") ||
+                    inference.name().equals("block_state_normal") ||
+                    inference.name().equals("block_kind_bad")
+            ) {
+                continue;
+            }
+            if ((inference.down_y() + inference.up_y()) / 2 < 0.333) {
                 continue;
             }
 
@@ -74,26 +86,6 @@ public class InferenceService {
         if (!center.isEmpty() && !right.isEmpty()) {
             center.append(", ");
         }
-
-        /*
-         sb.append("[");
-        for (int i = 0; i < inferenceTranslates.size(); i++) {
-            sb.append("{\"koreanTTSString\": \"");
-            sb.append(inferenceTranslates.get(i).toKorean());
-            sb.append("\", \"englishTTSString\": \"");
-            sb.append(inferenceTranslates.get(i).toEnglish());
-            sb.append("\", \"needAlert\": \"");
-            sb.append(inferenceTranslates.get(i).isAlert());
-
-            if (i != inferenceTranslates.size() - 1) {
-                sb.append("\"},");
-            }
-            else {
-                sb.append("\"}");
-            }
-        }
-        sb.append("]");
-         */
 
         if (!(left.isEmpty() && center.isEmpty() && right.isEmpty())) {
             return "[{\"koreanTTSString\":\"" +
