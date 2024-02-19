@@ -61,8 +61,8 @@ public enum Label {
 
     temporary_label("[임시 라벨]", "[temporary label]"), // TODO
 
-    red_traffic("빨간불", "Red traffic"),
     green_traffic("초록불", "Green traffic"),
+    stair("계단", "stair"),
 
     ;
     private final String korean;
