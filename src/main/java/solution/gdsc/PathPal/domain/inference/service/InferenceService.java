@@ -52,9 +52,9 @@ public class InferenceService {
             ) {
                 continue;
             }
-            if ((inference.down_y() + inference.up_y()) / 2 < 0.333) {
-                continue;
-            }
+//            if ((inference.down_y() + inference.up_y()) / 2 < 0.333) {
+//                continue;
+//            }
 
             Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
             Label label = Label.fromName(inference.name());
