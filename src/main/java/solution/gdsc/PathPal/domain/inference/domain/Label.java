@@ -37,7 +37,7 @@ public enum Label {
     bicycleroad_normal("자전거 도로", "Bicycle road normal"),
 
     //횡단 보도
-    planecrosswalk_broken("파손된 횡단보도", "Plane crosswalk broken"),
+    planecrosswalk_broken("횡단보도", "Plane crosswalk broken"),
     planecrosswalk_normal("횡단보도", "Plane crosswalk normal"),
 
     //도보 관련 이동수단
