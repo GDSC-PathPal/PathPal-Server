@@ -48,9 +48,7 @@ public class InferenceService {
             }
 
 
-            if (inference.name().equals("brailleblock_dot") ||
-                    inference.name().equals("brailleblock_line") ||
-                    inference.name().equals("flatness_D") ||
+            if (inference.name().equals("flatness_D") ||
                     inference.name().equals("flatness_E") ||
                     inference.name().equals("walkway_paved") ||
                     inference.name().equals("walkway_block") ||
