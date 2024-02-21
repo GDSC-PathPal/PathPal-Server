@@ -36,9 +36,18 @@ public class InferenceService {
         Set<LabelAndDirection> labelAndDirections = new HashSet<>();
 
         for (Inference inference : inferences) {
-            if (inference.confidence() < confidenceThreshold) {
-                continue;
+            if (inference.name().equals("planecrosswalk_broken")) {
+                if (inference.confidence() < 0.2) {
+                    continue;
+                }
             }
+            else {
+                if (inference.confidence() < confidenceThreshold) {
+                    continue;
+                }
+            }
+
+
             if (inference.name().equals("brailleblock_dot") ||
                     inference.name().equals("brailleblock_line") ||
                     inference.name().equals("flatness_D") ||
