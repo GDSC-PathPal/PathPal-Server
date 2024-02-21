@@ -29,8 +29,8 @@ public enum Label {
     barricade("바리케이트", "barricade"),
 
     //특수 도보
-    //brailleblock_dot("점자 블럭", "Braille block"),
-    //brailleblock_line("점자 블럭", "Braille block"),
+    brailleblock_dot("점자 블럭", "Braille block"),
+    brailleblock_line("점자 블럭", "Braille block"),
     brailleblock_dot_broken("파손된 점자 블럭", "Braille block broken"),
     brailleblock_line_broken("파손된 점자 블럭", "Braille block broken"),
     bicycleroad_broken("파손된 자전거 도로", "Bicycle road broken"),
