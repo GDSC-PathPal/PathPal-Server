@@ -38,7 +38,7 @@ out/
 
 
 .DS_Store
-application.yml
 application-test.yml
 application-dev.yml
+application-local.yml
 application-prob.yml

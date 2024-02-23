@@ -1,23 +1,22 @@
 package solution.gdsc.PathPal.global.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import solution.gdsc.PathPal.domain.inference.api.WebSocketClientController;
+import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 @Configuration
 @EnableWebSocket
+@RequiredArgsConstructor
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-    @Autowired
-    private WebSocketClientController clientInferenceController;
-    //private SocketHandlerTest clientInferenceController;
+    private final BinaryWebSocketHandler clientInferenceController;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(clientInferenceController, "/socket") // Handshake 주소
+        registry.addHandler(clientInferenceController, "/socket")
                 .setAllowedOrigins("*");
     }
 }

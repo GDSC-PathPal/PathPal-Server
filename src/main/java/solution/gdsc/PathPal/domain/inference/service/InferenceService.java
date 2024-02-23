@@ -12,83 +12,48 @@ import java.util.Set;
 @Service
 public class InferenceService {
 
-    private final double confidenceThreshold = 0.3;
+    private final double confidenceThreshold = 0.5;
 
-    public List<InferenceTranslate> convertInference(List<Inference> inferences) {
-        return inferences.stream()
-                .filter(inference -> inference.confidence() >= confidenceThreshold)
-                .map(inference -> {
-                    Label label = Label.fromName(inference.name());
-                    Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
-                    return new InferenceTranslate(inference.alert(), label, direction);
-                })
-                .sorted()
-                .toList();
-    }
-
-    public String convertInference2(List<Inference> inferences) {
+    public String convertInference(List<Inference> inferences) {
         StringBuilder left = new StringBuilder();
         StringBuilder center = new StringBuilder();
         StringBuilder right = new StringBuilder();
-
-        final double confidenceThreshold = 0.5;
-        boolean isAlert = false;
         Set<LabelAndDirection> labelAndDirections = new HashSet<>();
+        boolean isAlert = false;
 
         for (Inference inference : inferences) {
-            if (inference.name().equals("planecrosswalk_broken")) {
-                if (inference.confidence() < 0.2) {
-                    continue;
-                }
-            }
-            else {
-                if (inference.confidence() < confidenceThreshold) {
-                    continue;
-                }
-            }
-
-
-            if (inference.name().equals("brailleblock_dot") ||
-                    inference.name().equals("brailleblock_line") ||
-                    inference.name().equals("flatness_D") ||
-                    inference.name().equals("flatness_E") ||
-                    inference.name().equals("walkway_paved") ||
-                    inference.name().equals("walkway_block") ||
-                    inference.name().equals("paved_state_broken") ||
-                    inference.name().equals("paved_state_normal") ||
-                    inference.name().equals("block_state_normal") ||
-                    inference.name().equals("block_kind_bad")
-            ) {
+            if (isUnderConfidenceThreshold(inference) ||
+                    isUpsideObject(inference.up_y(), inference.down_y()) ||
+                    isIgnoreLabel(inference.name())) {
                 continue;
             }
-//            if ((inference.down_y() + inference.up_y()) / 2 < 0.333) {
-//                continue;
-//            }
 
-            Direction direction = Direction.fromCenterPoint((inference.left_x() + inference.right_x()) / 2);
-            Label label = Label.fromName(inference.name());
-
-            LabelAndDirection labelAndDirection = new LabelAndDirection(label, direction);
-            if (labelAndDirections.contains(labelAndDirection)) {
+            LabelAndDirection labelAndDirection = convertLabelAndDirection(inference.name(), inference.left_x(), inference.right_x());
+            if (isAlreadyContain(labelAndDirections, labelAndDirection)) {
                 continue;
             }
+
+            isAlert |= inference.alert();
             labelAndDirections.add(labelAndDirection);
-
-            if (inference.alert()) {
-                isAlert = true;
-            }
-
-            if (direction == Direction.LEFT) {
-                appendToStringBuilder(left, label, direction);
-            }
-            else if (direction == Direction.CENTER) {
-                appendToStringBuilder(center, label, direction);
-            }
-            else {
-                appendToStringBuilder(right, label, direction);
-            }
+            appendToStringBuilder(labelAndDirection, left, center, right);
         }
 
+        return convertToJson(left, center, right, isAlert);
+    }
+
+    private void appendToStringBuilder(LabelAndDirection labelAndDirection, StringBuilder left, StringBuilder center, StringBuilder right) {
+        if (labelAndDirection.direction == Direction.LEFT) {
+            appendToStringBuilder(left, labelAndDirection.name, labelAndDirection.direction);
+        }
+        else if (labelAndDirection.direction == Direction.CENTER) {
+            appendToStringBuilder(center, labelAndDirection.name, labelAndDirection.direction);
+        }
+        else {
+            appendToStringBuilder(right, labelAndDirection.name, labelAndDirection.direction);
+        }
+    }
+
+    private String convertToJson(StringBuilder left, StringBuilder center, StringBuilder right, boolean isAlert) {
         if (!left.isEmpty() && !(center.isEmpty() && right.isEmpty())) {
             left.append(", ");
         }
@@ -104,6 +69,37 @@ public class InferenceService {
         else {
             return "[]";
         }
+    }
+
+    private boolean isIgnoreLabel(String name) {
+        return name.equals("brailleblock_dot") ||
+                name.equals("brailleblock_line") ||
+                name.equals("flatness_D") ||
+                name.equals("flatness_E") ||
+                name.equals("walkway_paved") ||
+                name.equals("walkway_block") ||
+                name.equals("paved_state_broken") ||
+                name.equals("paved_state_normal") ||
+                name.equals("block_state_normal") ||
+                name.equals("block_kind_bad");
+    }
+
+    private LabelAndDirection convertLabelAndDirection(String name, double left_x, double right_x) {
+        Label label = Label.fromName(name);
+        Direction direction = Direction.fromCenterPoint((left_x + right_x) / 2);
+        return new LabelAndDirection(label, direction);
+    }
+
+    private boolean isAlreadyContain(Set<LabelAndDirection> labelAndDirections, LabelAndDirection labelAndDirection) {
+        return labelAndDirections.contains(labelAndDirection);
+    }
+
+    private boolean isUnderConfidenceThreshold(Inference inference) {
+        return inference.confidence() < confidenceThreshold;
+    }
+
+    private boolean isUpsideObject(double up_y, double down_y) {
+        return (up_y + down_y) / 2 < 0.333;
     }
 
     private void appendToStringBuilder(StringBuilder sb, Label label, Direction direction) {
